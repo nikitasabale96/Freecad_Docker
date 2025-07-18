@@ -814,13 +814,14 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
 $databases['default']['default'] = array (
-  'database' => '<database_name>',
-  'username' => '<your_username>',
-  'password' => '<your_password>',
+  'database' => getenv('ENV_DB'),
+  'username' => getenv('ENV_USR'),
+  'password' => getenv('ENV_PSWD'),
   'prefix' => '',
-  'host' => '<host_ip>',
+  'host' => getenv('ENV_HOST'),
   'port' => '3306',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
   'driver' => 'mysql',
+  'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
 );
 $settings['config_sync_directory'] = 'sites/default/files/config_5cMUlYpOBB8N0hVQpPOVIbuxiZQlLoZ5I39Yxic5zJtxrsTc0pbQ4SUQOqINbZ2LLFHCrz12sw/sync';
