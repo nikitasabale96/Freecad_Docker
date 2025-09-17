@@ -825,3 +825,6 @@ $databases['default']['default'] = array (
   'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
 );
 $settings['config_sync_directory'] = 'sites/default/files/config_5cMUlYpOBB8N0hVQpPOVIbuxiZQlLoZ5I39Yxic5zJtxrsTc0pbQ4SUQOqINbZ2LLFHCrz12sw/sync';
+$config['system.performance']['js']['preprocess'] = FALSE;
+$config['system.performance']['css']['preprocess'] = FALSE;
+
