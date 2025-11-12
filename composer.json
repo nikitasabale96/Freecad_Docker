@@ -28,7 +28,6 @@
         "drupal/jquery_ui": "^1.7",
         "drupal/libraries": "^4.0",
         "drupal/matomo": "^1.19",
-        "drupal/pathologic": "^2.0@alpha",
         "drupal/php": "^1.2",
         "drupal/scheduled_maintenance": "^2.0",
         "drupal/slick": "^3.0",
