@@ -710,7 +710,7 @@ $params['proposal_received']['headers'] = [
   'Bcc' => $bcc,
 ];
 //\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_received', $email_to, 'en', $params, $form, TRUE);
-if (!\Drupal::service('lab_migration_email')->lab_migration_mail('lab_migration', 'proposal_received', $email_to, 'en', $params, $form, TRUE)) {
+if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_received', $email_to, 'en', $params, $form, TRUE)) {
   \Drupal::messenger()->addError('Error sending email message.');
 }
     \Drupal::messenger()->addmessage($this->t('We have received you Lab migration proposal. We will get back to you soon.'));

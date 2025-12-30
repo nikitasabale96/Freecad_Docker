@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Url;
 /**
  * Implements a helper function to capitalize words, handling delimiters.
  */
@@ -14,112 +15,181 @@ function lm_ucname($string) {
   return $string;
 }
 
-function lab_migration_mail($key, &$message, $params)
-{
+
+function lab_migration_mail($key, &$message, $params) {
   global $user;
+
+  // Set the language for the message.
   $language = \Drupal::currentUser()->getPreferredLangcode();
-
-  // If the language key is set in the params, use it, otherwise fallback to 'en' or any other default.
   $language = isset($params['language']) ? $params['language'] : $language;
-
-  // Set the language for the message
   $message['langcode'] = $language;
-  // $language = $message['$language'];
-  //$language = user_preferred_language($user);
-  switch ($key)
-   {
-  
-     case 'proposal_received':
-          /* initializing data */
-          // $proposal_q = $db->query("SELECT * FROM {lab_migration_proposal} WHERE id = %d LIMIT 1", $params['proposal_received']['proposal_id']);
-          // $proposal_data = $proposal_q->fetchObject();
-          $query = \Drupal::database()->select('lab_migration_proposal');
-          $query->fields('lab_migration_proposal');
-          $query->condition('id', $params['proposal_received']['proposal_id']);
-          $query->range(0, 1);
-          $proposal_data = $query->execute()->fetchObject();
-          /* $samplecodefilename = "";
-          if (strlen($proposal_data->samplefilepath) >= 5)
-          {
-          $samplecodefilename = substr($proposal_data->samplefilepath, strrpos($proposal_data->samplefilepath, '/') + 1);
-          }
-          else
-          {
-          $samplecodefilename = "Not provided";
-          }*/
-          if ($proposal_data->solution_display == 1)
-            {
-              $solution_display = 'Yes';
-            }
-          else
-            {
-              $solution_display = 'No';
-            }
-          if ($proposal_data->solution_provider_uid == 0)
-            {
-              $solution_provider_user = 'Open';
-            }
-          else if ($proposal_data->solution_provider_uid == $proposal_data->uid)
-            {
-              $solution_provider_user = 'Proposer';
-            }
-          else
-            {
-              $solution_provider_user = 'Unknown';
-            }
-          // $experiment_q = $db->query("SELECT * FROM {lab_migration_experiment} WHERE proposal_id = %d ORDER BY number",
-          //  $params['proposal_received']['proposal_id'], 1);
-          $query = \Drupal::database()->select('lab_migration_experiment');
-          $query->fields('lab_migration_experiment');
-          $query->condition('proposal_id', $params['proposal_received']['proposal_id']);
-          $query->orderBy('number', 'ASC');
-          $experiment_q = $query->execute();
-          $experiment_list = '';
-          while ($experiment_data = $experiment_q->fetchObject())
-            {
-              $experiment_list .= '<p>' . $experiment_data->number . ') ' . $experiment_data->title . '<br> Description: ' . $experiment_data->description . '<br>';
-              $experiment_list .= ' ';
-              $experiment_list .= '</p>';
-            }
-          $user_data = User::load($params['proposal_received']['user_id']);
-          // var_dump($user_data);die;
-          $message['headers'] = $params['proposal_received']['headers'];
-          $message['subject'] = $this->t('[!site_name] [Lab Migration Project]Your Lab migration proposal has been received  ', array(
-              '@site_name' => \Drupal::config('site_name', '')
-          ), array(
-              'language' => '$language'
-          ));
-          $message['body'][] = 
-              t('
-Dear ' . $proposal_data->name . ',
+
+  switch ($key) {
+    case 'proposal_received':
+      // Load proposal data.
+      $query = \Drupal::database()->select('lab_migration_proposal', 'p');
+      $query->fields('p');
+      $query->condition('id', $params['proposal_received']['proposal_id']);
+      $query->range(0, 1);
+      $proposal_data = $query->execute()->fetchObject();
+
+      // Set solution display and provider.
+      $solution_display = ($proposal_data->solution_display == 1) ? 'Yes' : 'No';
+      if ($proposal_data->solution_provider_uid == 0) {
+        $solution_provider_user = 'Open';
+      } elseif ($proposal_data->solution_provider_uid == $proposal_data->uid) {
+        $solution_provider_user = 'Proposer';
+      } else {
+        $solution_provider_user = 'Unknown';
+      }
+
+      // Load experiments.
+      $query = \Drupal::database()->select('lab_migration_experiment', 'e');
+      $query->fields('e');
+      $query->condition('proposal_id', $params['proposal_received']['proposal_id']);
+      $query->orderBy('number', 'ASC');
+      $experiment_q = $query->execute();
+      $experiment_list = '';
+      while ($experiment_data = $experiment_q->fetchObject()) {
+        $experiment_list .= '<p>' . $experiment_data->number . ') ' . $experiment_data->title . '<br> Description: ' . $experiment_data->description . '<br></p>';
+      }
+
+      // Load user data.
+      $user_data = User::load($params['proposal_received']['user_id']);
+
+      // Set email headers.
+      $message['headers'] = $params['proposal_received']['headers'];
+
+      // Set email subject.
+      $message['subject'] = \Drupal::translation()->translate('[@site_name][Lab Migration Project] Your Lab migration proposal has been received', [
+        '@site_name' => \Drupal::config('system.site')->get('name'),
+      ], ['langcode' => $language]);
+
+      // Set email body.
+      $message['body'][] = \Drupal::translation()->translate('
+Dear @full_name,
 
 We have received your proposal for lab migration with the following details:
 
 Full Name: @full_name
-Email: @user_email 
-Contact No.: @contact no.
-Department/Branch: 
-University/Institute: @university/@Institute
+Email: @user_email
+Contact No.: @contact_no
+Department/Branch: @department
+University/Institute: @university
 City: @city
 State: @state
 
+Solution Provided By: @solution_provider_user
 
-Solution Provided By: ' . $solution_provider_user . '
+List of experiments: @experiment_list
 
-List of experiments: ' . $experiment_list . '
-
-The proposal is under review. You will be notified of the decision.  
+The proposal is under review. You will be notified of the decision.
 
 Best Wishes,
 
-!site_name Team
-FOSSEE, IIT Bombay',[
-                  '@site_name' => \Drupal::config('site_name')->get('name'),
-                  'Full Name: @full_name' => $user_data->name
-], [
-                  'language' => '$language'
-              ]
-              );
-          break;
-        }
+@site_name Team
+FOSSEE, IIT Bombay', [
+        '@site_name' => \Drupal::config('system.site')->get('name'),
+        '@full_name' => $proposal_data->name,
+        '@user_email' => $user_data->getEmail(),
+        '@contact_no' => $proposal_data->contact_no ?? 'Not provided',
+        '@department' => $proposal_data->department ?? 'Not provided',
+        '@university' => $proposal_data->university ?? 'Not provided',
+        '@city' => $proposal_data->city ?? 'Not provided',
+        '@state' => $proposal_data->state ?? 'Not provided',
+        '@solution_provider_user' => $solution_provider_user,
+        '@experiment_list' => $experiment_list,
+      ], ['langcode' => $language]);
+
+      break;
+    case 'proposal_approved':
+  // Load proposal data.
+  $query = \Drupal::database()->select('lab_migration_proposal', 'p');
+  $query->fields('p');
+  $query->condition('id', $params['proposal_approved']['proposal_id']);
+  $query->range(0, 1);
+  $proposal_data = $query->execute()->fetchObject();
+
+  // Set solution display and provider.
+  $solution_display = ($proposal_data->solution_display == 1) ? 'Yes' : 'No';
+  if ($proposal_data->solution_provider_uid == 0) {
+    $solution_provider_user = 'Open';
+  } elseif ($proposal_data->solution_provider_uid == $proposal_data->uid) {
+    $solution_provider_user = 'Proposer';
+  } else {
+    $solution_provider_user = 'Unknown';
+  }
+
+  // Load experiments.
+  $query = \Drupal::database()->select('lab_migration_experiment', 'e');
+  $query->fields('e');
+  $query->condition('proposal_id', $params['proposal_approved']['proposal_id']);
+  $query->orderBy('number', 'ASC');
+  $experiment_q = $query->execute();
+  $experiment_list = '';
+  while ($experiment_data = $experiment_q->fetchObject()) {
+    $experiment_list .= '<p>' . $experiment_data->number . ') ' . $experiment_data->title . '<br> Description: ' . $experiment_data->description . '<br></p>';
+  }
+
+  // Load user data.
+  $user_data = User::load($params['proposal_approved']['user_id']);
+
+  // Set email headers.
+  $message['headers'] = $params['proposal_approved']['headers'];
+
+  // Set email subject.
+  $message['subject'] = \Drupal::translation()->translate(
+    '[!site_name] Your Lab migration proposal has been approved',
+    [
+      '!site_name' => \Drupal::config('system.site')->get('name'),
+    ],
+    ['langcode' => $language]
+  );
+
+  // Set email body.
+  $message['body'][] = \Drupal::translation()->translate(
+    'Dear @user_name,
+
+Congratulations! Your Lab migration proposal with the below details has been approved:
+
+Full Name: @name_title @name
+Email: @user_email
+Contact No.: @contact_ph
+Department/Branch: @department
+University/Institute: @university
+City: @city
+State: @state
+
+Solution Provided By: @solution_provider_user
+
+List of experiments: @experiment_list
+
+Please ensure that ALL the guidelines for coding are strictly followed:
+https://r.fossee.in/lab-migration/lab-migration-guidelines
+
+Best Wishes,
+
+@site_name Team
+FOSSEE, IIT Bombay',
+    [
+      '@user_name' => $proposal_data->name,
+      '@name_title' => $proposal_data->name_title,
+      '@name' => $proposal_data->name,
+      '@user_email' => $user_data->getEmail(),
+      '@contact_ph' => $proposal_data->contact_ph,
+      '@department' => $proposal_data->department,
+      '@university' => $proposal_data->university,
+      '@city' => $proposal_data->city,
+      '@state' => $proposal_data->state,
+      '@solution_provider_user' => $solution_provider_user,
+      '@experiment_list' => $experiment_list,
+      '@site_name' => \Drupal::config('system.site')->get('name'),
+    ],
+    ['langcode' => $language]
+  );
+  break;
+
+
+  }
 }
+
