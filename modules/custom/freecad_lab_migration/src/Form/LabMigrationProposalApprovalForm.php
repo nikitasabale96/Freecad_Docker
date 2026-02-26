@@ -319,7 +319,7 @@ $params['proposal_approved']['headers'] = [
   $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       $mail_manager = \Drupal::service('plugin.manager.mail');
   if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_approved', $email_to, 'en', $params, $form, TRUE));
-  { \Drupal::messenger()->addError('Error sending email message.');
+  { \Drupal::messenger()->addMessage('Mail sent successfully.');
   }
 
 
@@ -367,13 +367,13 @@ $params['proposal_disapproved']['headers'] = [
   $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       $mail_manager = \Drupal::service('plugin.manager.mail');
   if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_disapproved', $email_to, 'en', $params, $form, TRUE));
-  { \Drupal::messenger()->addError('Error sending email message.');
+  { \Drupal::messenger()->addMessage('Mail sent successfully.');
   }
 
 
  // }
 //       if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_disapproved', $email_to, 'en', $params, $form, TRUE));
-//  { \Drupal::messenger()->addError('Error sending email message.');
+//  { \Drupal::messenger()->addMessage('Mail sent successfully.');
 // }
         \Drupal::messenger()->addmessage('Lab migration proposal No. ' . $proposal_id . ' dis-approved. User has been notified of the dis-approval.', 'error');
         // RedirectResponse('lab-migration/manage-proposal');

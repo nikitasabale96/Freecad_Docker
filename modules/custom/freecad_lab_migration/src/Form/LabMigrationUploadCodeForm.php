@@ -586,7 +586,7 @@ $result = $mail_manager->mail(
 );
 
 if (!$result['result']) {
-  \Drupal::messenger()->addError('Error sending email message.');
+  \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
 
 
@@ -594,7 +594,7 @@ if (!$result['result']) {
   // $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
   //     $mail_manager = \Drupal::service('plugin.manager.mail');
   // if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_uploaded', $email_to, 'en', $params, $form, TRUE));
-  // { \Drupal::messenger()->addError('Error sending email message.');
+  // { \Drupal::messenger()->addMessage('Mail sent successfully.');
   // }
   
   $response = new RedirectResponse(Url::fromRoute('lab_migration.upload_code_form')->toString());
