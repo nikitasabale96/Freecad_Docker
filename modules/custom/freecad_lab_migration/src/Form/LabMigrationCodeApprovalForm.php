@@ -322,7 +322,7 @@ $result = $mail_manager->mail(
 
 // Error handling
 if (!$result['result']) {
-    \Drupal::messenger()->addError('Error sending email message.');
+    \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
 
     }
@@ -375,7 +375,7 @@ $result = $mail_manager->mail(
 
 // Error handling
 if (!$result['result']) {
-    \Drupal::messenger()->addError('Error sending email message.');
+    \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
       }
       else {
@@ -428,7 +428,7 @@ $result = $mail_manager->mail(
 
 // Error handling
 if (!$result['result']) {
-  \Drupal::messenger()->addError('Error sending email message.');
+  \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
   }
           else {

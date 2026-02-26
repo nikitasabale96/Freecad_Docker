@@ -474,7 +474,7 @@ $cc = \Drupal::config('lab_migration.settings')->get('lab_migration_cc_emails');
   $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       $mail_manager = \Drupal::service('plugin.manager.mail');
   if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_uploaded', $email_to, 'en', $params, $form, TRUE));
-  { \Drupal::messenger()->addError('Error sending email message.');
+  { \Drupal::messenger()->addMessage('Sending email message.');
   }
 
 
