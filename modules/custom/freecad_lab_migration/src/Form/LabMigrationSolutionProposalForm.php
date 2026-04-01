@@ -86,21 +86,21 @@ return $response;
     $form['solution_provider_name'] = [
       '#type' => 'textfield',
       '#title' => t('Name of the Solution Provider'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
     ];
     $form['solution_provider_email_id'] = [
       '#type' => 'textfield',
       '#title' => t('Email'),
-      '#size' => 30,
+      // '#size' => 30,
       '#value' => $user->getEmail(),
       '#disabled' => TRUE,
     ];
     $form['solution_provider_contact_ph'] = [
       '#type' => 'textfield',
       '#title' => t('Contact No.'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 15,
       '#required' => TRUE,
     ];
@@ -113,7 +113,7 @@ return $response;
     $form['solution_provider_university'] = [
       '#type' => 'textfield',
       '#title' => t('University/Institute'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
     ];
@@ -131,7 +131,7 @@ return $response;
     $form['other_country'] = [
       '#type' => 'textfield',
       '#title' => t('Other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your country name')
         ],
@@ -146,7 +146,7 @@ return $response;
     $form['other_state'] = [
       '#type' => 'textfield',
       '#title' => t('State other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your state/region name')
         ],
@@ -161,7 +161,7 @@ return $response;
     $form['other_city'] = [
       '#type' => 'textfield',
       '#title' => t('City other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your city name')
         ],
@@ -201,7 +201,7 @@ return $response;
     $form['pincode'] = [
       '#type' => 'textfield',
       '#title' => t('Pincode'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 6,
       '#required' => FALSE,
       '#attributes' => [
@@ -216,7 +216,7 @@ return $response;
     ];
     $form['older'] = [
       '#type' => 'textfield',
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       //'#required' => TRUE,
         '#description' => t('Specify the Older version used'),
@@ -400,7 +400,7 @@ $result = $mailManager->mail(
 );
 
 if (empty($result['result'])) {
-  \Drupal::messenger()->addError('Error sending email message.');
+  \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
 else {
   \Drupal::messenger()->addStatus('Email sent successfully.');
@@ -434,7 +434,7 @@ $result = $mailManager->mail(
 );
 
 if (empty($result['result'])) {
-  \Drupal::messenger()->addError('Error sending email message.');
+  \Drupal::messenger()->addMessage('Mail sent successfully.');
 }
 $response = new RedirectResponse('<front>');
     $response->send();

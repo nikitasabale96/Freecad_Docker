@@ -77,7 +77,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['name'] = [
       '#type' => 'textfield',
       '#title' => t('Name of the Proposer'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#default_value' => $proposal_data->name,
@@ -90,7 +90,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['contact_ph'] = [
       '#type' => 'textfield',
       '#title' => t('Contact No.'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 15,
       '#required' => TRUE,
       '#default_value' => $proposal_data->contact_ph,
@@ -105,7 +105,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['university'] = [
       '#type' => 'textfield',
       '#title' => t('University/Institute'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 50,
       '#required' => TRUE,
       '#default_value' => $proposal_data->university,
@@ -125,7 +125,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_country'] = [
       '#type' => 'textfield',
       '#title' => t('Other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#default_value' => $proposal_data->country,
       '#attributes' => [
         'placeholder' => t('Enter your country name')
@@ -141,7 +141,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_state'] = [
       '#type' => 'textfield',
       '#title' => t('State other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your state/region name')
         ],
@@ -157,7 +157,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['other_city'] = [
       '#type' => 'textfield',
       '#title' => t('City other than India'),
-      '#size' => 100,
+      // '#size' => 100,
       '#attributes' => [
         'placeholder' => t('Enter your city name')
         ],
@@ -200,7 +200,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['pincode'] = [
       '#type' => 'textfield',
       '#title' => t('Pincode'),
-      '#size' => 30,
+      // '#size' => 30,
       '#maxlength' => 6,
       '#default_value' => $proposal_data->pincode,
       '#attributes' => [
@@ -226,7 +226,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
     $form['lab_title'] = [
       '#type' => 'textfield',
       '#title' => t('Title of the Lab'),
-      '#size' => 100,
+      // '#size' => 100,
       '#maxlength' => 255,
       '#required' => TRUE,
       '#default_value' => $proposal_data->lab_title,
@@ -266,7 +266,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
         $form['lab_experiment_update' . $experiment_data->id] = [
           '#type' => 'textfield',
           '#title' => t('Title of the Experiment ') . $counter,
-          '#size' => 100,
+          // '#size' => 100,
           '#default_value' => $experiment_title,
         ];
         $namefield = "lab_experiment_update" . $experiment_data->id;
@@ -283,7 +283,7 @@ return new RedirectResponse('/lab-migration/manage-proposal/pending');
         $form['lab_experiment_insert' . $counter] = [
           '#type' => 'textfield',
           '#title' => t('Title of the Experiment ') . $counter,
-          '#size' => 100,
+          // '#size' => 100,
           '#required' => FALSE,
           '#default_value' => $experiment_title,
         ];

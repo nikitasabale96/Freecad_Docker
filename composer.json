@@ -35,7 +35,7 @@
         "drupal/superfish": "^1.8",
         "drupal/views_dates": "2.x-dev@dev",
         "drupal/views_slideshow": "^5.0",
-        "drush/drush": "^12.5"
+        "drush/drush": "^12"
     },
     "conflict": {
         "drupal/drupal": "*"

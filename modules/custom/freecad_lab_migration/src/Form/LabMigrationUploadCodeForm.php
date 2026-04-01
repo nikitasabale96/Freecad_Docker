@@ -103,14 +103,14 @@ $response->send();
       '#title' => t('Title of the Experiment'),
       '#options' => $experiment_rows,
       '#multiple' => FALSE,
-      '#size' => 1,
+      // '#size' => 1,
       '#required' => TRUE,
     ];
 // var_dump($form);die;
     $form['code_number'] = [
       '#type' => 'textfield',
       '#title' => t('Code No'),
-      '#size' => 5,
+      // '#size' => 5,
       '#maxlength' => 10,
       '#description' => t(""),
       '#required' => TRUE,
@@ -118,7 +118,7 @@ $response->send();
     $form['code_caption'] = [
       '#type' => 'textfield',
       '#title' => t('Caption'),
-      '#size' => 40,
+      // '#size' => 40,
       '#maxlength' => 255,
       '#description' => t(''),
       '#required' => TRUE,
@@ -160,7 +160,7 @@ $response->send();
     $form['sourcefile']['sourcefile1'] = [
       '#type' => 'file',
       '#title' => t('Upload main or source file'),
-      '#size' => 48,
+      // '#size' => 48,
       '#description' => t('Only alphabets and numbers are allowed as a valid filename.') . '<br />' . t('Allowed file extensions: ') .$extensions
 ,
     ];
