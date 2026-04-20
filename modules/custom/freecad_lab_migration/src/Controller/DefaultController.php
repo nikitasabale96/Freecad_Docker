@@ -82,7 +82,7 @@ class DefaultController extends ControllerBase {
       '#type' => 'table',
       '#header' => $pending_header,
       '#rows' => $pending_rows,
-      //'#empty' => 'no rows found',
+      '#empty' => 'no rows found',
     ];
     //var_dump($output);die;
     return $output;
@@ -145,6 +145,8 @@ class DefaultController extends ControllerBase {
       '#type' => 'table',
       '#header' => $pending_header,
       '#rows' => $pending_rows,
+      '#empty' => 'No rows found'
+
     ];
    
     return $output;
@@ -640,6 +642,8 @@ $link = Link::fromTextAndUrl(t('Edit'), $url)->toString();
         '#type' => 'table',
         '#header' => $proposal_header,
         '#rows' => $proposal_rows,
+        '#empty' => 'No rows found'
+
     ];
       return $output;   
       }
@@ -691,6 +695,8 @@ $link = Link::fromTextAndUrl(t('Edit'), $url)->toString();
           '#type' => 'table',
           '#header' => $proposal_header,
           '#rows' => $proposal_rows,
+          '#empty' => 'No rows found'
+
           
       ];
         return $output;
@@ -1750,14 +1756,14 @@ public function lab_migration_download_syllabus_copy() {
       '#title' => t('Title of the Experiment'),
       '#options' => $experiment_rows,
       '#multiple' => FALSE,
-      '#size' => 1,
+      // '#size' => 1,
       '#required' => TRUE,
     );
   
     $form['code_number'] = array(
       '#type' => 'textfield',
       '#title' => t('Code No'),
-      '#size' => 5,
+      // '#size' => 5,
       '#maxlength' => 10,
       '#description' => t(""),
       '#required' => TRUE,
@@ -1765,7 +1771,7 @@ public function lab_migration_download_syllabus_copy() {
     $form['code_caption'] = array(
       '#type' => 'textfield',
       '#title' => t('Caption'),
-      '#size' => 40,
+      // '#size' => 40,
       '#maxlength' => 255,
       '#description' => t(''),
       '#required' => TRUE,
@@ -1806,7 +1812,7 @@ public function lab_migration_download_syllabus_copy() {
     $form['sourcefile']['sourcefile1'] = array(
         '#type' => 'file',
         '#title' => t('Upload main or source file'),
-        '#size' => 48,
+        // '#size' => 48,
         '#description' => t('Only alphabets and numbers are allowed as a valid filename.') . '<br />' .
         t('Allowed file extensions: ') . variable_get('lab_migration_source_extensions', ''),
     );

@@ -18,6 +18,12 @@
   --font-heading: "Sora", sans-serif;
   --font-weight-bold: 500;
 }
+  .flexslider .slides img {
+  margin:auto !important;
+  width: auto !important;
+  display: block;
+} 
+
 
 /* Default Box sizing */
 *,
@@ -947,6 +953,7 @@ td {
   display: flex;
   gap: 1rem;
   align-items: center;
+  z-index: 1000;
 }
 
 /* Header menu */
