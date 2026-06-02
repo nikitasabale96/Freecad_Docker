@@ -709,15 +709,41 @@ $params['proposal_received']['headers'] = [
   'Cc' => $cc,
   'Bcc' => $bcc,
 ];
-    $langcode = $user->getPreferredLangcode();
-if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_received', $email_to, 'en', $params, $form, TRUE));
- { \Drupal::messenger()->addmessage('Mail sent successfully.');
+$mailManager = \Drupal::service('plugin.manager.mail');
+
+$result = $mailManager->mail(
+  'lab_migration',
+  'proposal_received',
+  $email_to,
+  $langcode,
+  $params,
+  $form,
+  TRUE
+);
+
+if ($result['result']) {
+  \Drupal::messenger()->addMessage($this->t('Mail sent successfully.'));
 }
-    \Drupal::messenger()->addmessage($this->t('We have received you Lab migration proposal. We will get back to you soon.'));
-     $response = new RedirectResponse(Url::fromRoute('<front>')->toString());
+else {
+  \Drupal::messenger()->addError($this->t('Unable to send mail.'));
+}
+    
+
+\Drupal::messenger()->addMessage(
+  $this->t('We have received your Lab Migration proposal. We will get back to you soon.')
+);
+
+// Proper Drupal redirect
+$form_state->setRedirect('<front>');
+
+// if (!\Drupal::service('plugin.manager.mail')->mail('lab_migration', 'proposal_received', $email_to, 'en', $params, $form, TRUE));
+//  { \Drupal::messenger()->addmessage('Mail sent successfully.');
+// }
+//     \Drupal::messenger()->addmessage($this->t('We have received you Lab migration proposal. We will get back to you soon.'));
+//      $response = new RedirectResponse(Url::fromRoute('<front>')->toString());
   
-// //   // Send the redirect response
-  $response->send();
+// // //   // Send the redirect response
+//   $response->send();
   }
 
 }
