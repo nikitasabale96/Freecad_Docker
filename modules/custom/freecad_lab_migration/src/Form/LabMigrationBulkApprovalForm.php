@@ -23,10 +23,11 @@ class LabMigrationBulkApprovalForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Enable form caching for reliable AJAX interactions
-    $form['#cache'] = ['max-age' => 0];
+$form['#cache'] = ['max-age' => 0];
 
     $options_first = $this->_bulk_list_of_labs() ?? [];
     $selected_lab = $form_state->getValue('lab') ?: 0;
+    $selected_experiment = $form_state->getValue('lab_experiment_list') ?: 0;
 
     $form['lab'] = [
       '#type' => 'select',
@@ -35,17 +36,17 @@ class LabMigrationBulkApprovalForm extends FormBase {
       '#default_value' => $selected_lab,
       '#ajax' => [
         'callback' => '::ajax_experiment_list_callback',
-        'wrapper' => 'ajax_selected_lab_wrapper', // Points to the container container
+        'wrapper' => 'ajax_selected_lab_wrapper',
       ],
     ];
 
-    // This wrapper stays static in the DOM, we only swap its INNER contents
+    // Main parent dynamic container wrapper
     $form['download_lab_wrapper'] = [
       '#type' => 'container',
       '#attributes' => ['id' => 'ajax_selected_lab_wrapper'],
     ];
 
-    // Only render operational sub-fields if a valid Lab is selected
+    // FIX: All dependent dynamic elements must reside inside the structural conditional block
     if ($selected_lab > 0) {
       $form['download_lab_wrapper']['selected_lab'] = [
         '#type' => 'markup',
@@ -61,47 +62,95 @@ class LabMigrationBulkApprovalForm extends FormBase {
         '#options' => $this->_bulk_list_lab_actions(),
         '#default_value' => 0,
       ];
+
+      // FIX: Changed legacy undefined variable $lab_default_value to $selected_lab
+      $form['download_lab_wrapper']['lab_experiment_list'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Title of the experiment'),
+        '#options' => $this->_ajax_bulk_get_experiment_list($selected_lab),
+        '#default_value' => $selected_experiment,
+        '#ajax' => [
+          'callback' => '::ajax_solution_list_callback',
+          'wrapper'  => 'ajax_download_experiments',
+        ],
+        '#prefix' => '<div id="ajax_selected_experiment">',
+        '#suffix' => '</div>',
+      ];
+
+      // Secondary dynamic container wrapper nested safely inside the parent wrapper
+      $form['download_lab_wrapper']['download_experiment_wrapper'] = [
+        '#type' => 'container',
+        '#attributes' => ['id' => 'ajax_download_experiments'],
+      ];
+
+      if ($selected_experiment > 0) {
+        $form['download_lab_wrapper']['download_experiment_wrapper']['download_experiment'] = [
+          '#type' => 'item',
+          '#markup' => Link::fromTextAndUrl($this->t('Download Experiment'), Url::fromUri('internal:/lab-migration/download/experiment/' . $selected_experiment))->toString(),
+        ];
+
+        $form['download_lab_wrapper']['download_experiment_wrapper']['lab_experiment_actions'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Please select action for Entire Experiment'),
+          '#options' => $this->_bulk_list_experiment_actions(),
+          '#default_value' => 0,
+          '#prefix' => '<div id="ajax_selected_lab_experiment_action" style="color:red;">',
+          '#suffix' => '</div>',
+        ];
+
+        $form['download_lab_wrapper']['download_experiment_wrapper']['solution_list'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Title of the solution'),
+          '#options' => $this->_ajax_bulk_get_solution_list($selected_experiment),
+          '#default_value' => $form_state->getValue('solution_list') ?: 0,
+          '#ajax' => [
+            'callback' => '::ajax_solution_file_callback',
+            'wrapper'  => 'ajax_download_solution_file',
+          ],
+        ];
+
+        // Tertiary container wrapper for single solution operations
+        $form['download_lab_wrapper']['download_experiment_wrapper']['download_solution_wrapper'] = [
+          '#type' => 'container',
+          '#attributes' => ['id' => 'ajax_download_solution_file'],
+        ];
+
+        $selected_solution = $form_state->getValue('solution_list') ?: 0;
+        if ($selected_solution > 0) {
+          $form['download_lab_wrapper']['download_experiment_wrapper']['download_solution_wrapper']['download_solution'] = [
+            '#type' => 'item',
+            '#markup' => Link::fromTextAndUrl($this->t('Download Solution'), Url::fromUri('internal:/lab-migration/download/solution/' . $selected_solution))->toString(),
+          ];
+
+          $form['download_lab_wrapper']['download_experiment_wrapper']['download_solution_wrapper']['lab_experiment_solution_actions'] = [
+            '#type' => 'select',
+            '#title' => $this->t('Please select action for solution'),
+            '#options' => $this->_bulk_list_solution_actions(),
+            '#default_value' => 0,
+            '#prefix' => '<div id="ajax_selected_lab_experiment_solution_action" style="color:red;">',
+            '#suffix' => '</div>',
+          ];
+        }
+
+        // Placeholder element slots matching legacy layout structures
+        $form['download_lab_wrapper']['download_experiment_wrapper']['download_solution_placeholder'] = [
+          '#type' => 'item',
+          '#markup' => '<div id="ajax_download_experiment_solution"></div>',
+        ];
+
+        $form['download_lab_wrapper']['download_experiment_wrapper']['edit_solution'] = [
+          '#type' => 'item',
+          '#markup' => '<div id="ajax_edit_experiment_solution"></div>',
+        ];
+
+        $form['download_lab_wrapper']['download_experiment_wrapper']['solution_files'] = [
+          '#type' => 'item',
+          '#markup' => '<div id="ajax_solution_files"></div>',
+        ];
+      }
     }
 
-      // $form['download_lab_wrapper']['lab_experiment_actions'] = [
-      //   '#type' => 'select',
-      //   '#title' => $this->t('Please select action for Experiment'),
-      //   '#options' => $this->_bulk_list_experiment_actions(),
-      //   '#default_value' => 0,
-      // ];
-
-      // $form['download_lab_wrapper']['lab_experiment_solution_actions'] = [
-      //   '#type' => 'select',
-      //   '#title' => $this->t('Please select action for Solution'),
-      //   '#options' => $this->_bulk_list_solution_actions(),
-      //   '#default_value' => 0,
-      // ];
-
-    //   $form['download_lab_wrapper']['message'] = [
-    //     '#type' => 'textarea',
-    //     '#title' => $this->t('If Dis-Approved, please specify reason for Dis-Approval'),
-    //     '#states' => [
-    //       'visible' => [
-    //         [':input[name="lab_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_experiment_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_experiment_solution_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_actions"]' => ['value' => 4]],
-    //       ],
-    //       'required' => [
-    //         [':input[name="lab_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_experiment_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_experiment_solution_actions"]' => ['value' => 3]],
-    //         'or',
-    //         [':input[name="lab_actions"]' => ['value' => 4]],
-    //       ],
-    //     ],
-    //   ];
-    // This must live on the root level outside the AJAX zone to preserve state data strings
+    // Dynamic state configuration for the reason textarea
     $form['message'] = [
       '#type' => 'textarea',
       '#title' => $this->t('If Dis-Approved, please specify reason for Dis-Approval/Deletion'),
@@ -111,11 +160,19 @@ class LabMigrationBulkApprovalForm extends FormBase {
           [':input[name="lab_actions"]' => ['value' => '3']],
           'or',
           [':input[name="lab_actions"]' => ['value' => '4']],
+          'or',
+          [':input[name="lab_experiment_actions"]' => ['value' => '3']],
+          'or',
+          [':input[name="lab_experiment_solution_actions"]' => ['value' => '3']],
         ],
         'required' => [
           [':input[name="lab_actions"]' => ['value' => '3']],
           'or',
           [':input[name="lab_actions"]' => ['value' => '4']],
+          'or',
+          [':input[name="lab_experiment_actions"]' => ['value' => '3']],
+          'or',
+          [':input[name="lab_experiment_solution_actions"]' => ['value' => '3']],
         ],
       ],
     ];
@@ -123,7 +180,7 @@ class LabMigrationBulkApprovalForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit bulk actions'),
+      '#value' => $this->t('Submit'),
     ];
 
     return $form;
@@ -133,6 +190,54 @@ class LabMigrationBulkApprovalForm extends FormBase {
     return $form['download_lab_wrapper'];
   }
 
+  public function ajax_solution_list_callback(array &$form, FormStateInterface $form_state) {
+    return $form['download_lab_wrapper']['download_experiment_wrapper'];
+  }
+
+  public function ajax_solution_file_callback(array &$form, FormStateInterface $form_state) {
+    return $form['download_lab_wrapper']['download_experiment_wrapper']['download_solution_wrapper'];
+  }
+
+  public function _ajax_bulk_get_experiment_list($lab_id = 0) {
+    $experiments = [0 => 'Please select...'];
+    if (empty($lab_id)) {
+      return $experiments;
+    }
+    
+    $connection = Database::getConnection();
+    $query = $connection->select('lab_migration_experiment', 'lme')
+      ->fields('lme', ['id', 'number', 'title'])
+      ->condition('proposal_id', $lab_id)
+      ->orderBy('number', 'ASC');
+
+    $experiments_q = $query->execute();
+    foreach ($experiments_q as $experiments_data) {
+      $experiments[$experiments_data->id] = $experiments_data->number . '. ' . $experiments_data->title;
+    }
+
+    return $experiments;
+  }
+
+  public function _ajax_bulk_get_solution_list($experiment_id = 0) {
+    $solutions = [0 => 'Please select...'];
+    if (empty($experiment_id)) {
+      return $solutions;
+    }
+
+    $connection = Database::getConnection();
+    $query = $connection->select('lab_migration_solution', 'lms')
+      ->fields('lms', ['id', 'code_number', 'caption'])
+      ->condition('experiment_id', $experiment_id)
+      ->orderBy('code_number', 'ASC');
+
+    $solutions_q = $query->execute();
+    foreach ($solutions_q as $solution_data) {
+      $solutions[$solution_data->id] = $solution_data->code_number . '. ' . $solution_data->caption;
+    }
+
+    return $solutions;
+  }
+
   public function _bulk_list_lab_actions(): array {
     return [
       0 => 'Please select...',
@@ -140,6 +245,24 @@ class LabMigrationBulkApprovalForm extends FormBase {
       2 => 'Pending Review Entire Lab',
       3 => 'Dis-Approve Entire Lab (This will delete all solutions)',
       4 => 'Delete Entire Lab Including Proposal',
+    ];
+  }
+
+  public function _bulk_list_experiment_actions(): array {
+    return [
+      0 => 'Please select...',
+      1 => 'Approve Entire Experiment',
+      2 => 'Pending Review Entire Experiment',
+      3 => 'Dis-Approve Entire Experiment',
+    ];
+  }
+
+  public function _bulk_list_solution_actions(): array {
+    return [
+      0 => 'Please select...',
+      1 => 'Approve Entire Solution',
+      2 => 'Pending Review Entire Solution',
+      3 => 'Dis-approve Solution',
     ];
   }
 
@@ -157,26 +280,6 @@ class LabMigrationBulkApprovalForm extends FormBase {
     }
     return $lab_titles;
   }
-
-  public function _bulk_list_solution_actions(): array {
-    return [
-      0 => 'Please select...',
-      1 => 'Approve Entire Solution',
-      2 => 'Pending Review Entire Solution',
-      3 => 'Dis-approve Solution',
-    ];
-  }
-
-  public function _bulk_list_experiment_actions(): array {
-    return [
-      0 => 'Please select...',
-      1 => 'Approve Entire Experiment',
-      2 => 'Pending Review Entire Experiment',
-      3 => 'Dis-Approve Entire Experiment',
-    ];
-  }
-
-
   /**
    * {@inheritdoc}
    */
@@ -291,10 +394,8 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
           $action_performed = TRUE;
         }
 
+        
         // -----------------------------------------------------------------
-        // CASE 3: DISAPPROVE ENTIRE LAB (Option 3)
-        // -----------------------------------------------------------------
-// -----------------------------------------------------------------
         // CASE 3: DISAPPROVE ENTIRE LAB (Option 3)
         // -----------------------------------------------------------------
         elseif (($lab_actions == 3) && ($exp_actions == 0) && ($sol_actions == 0)) {
@@ -410,7 +511,15 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
             \Drupal::messenger()->addMessage($this->t('Deleted Lab Proposal entirely from systems.'), 'status');
 
             $email_subject = $this->t('[@site_name] Your uploaded Lab Migration solutions including the Lab proposal have been deleted', ['@site_name' => $site_name])->render();
-            $email_body_text = $this->t("Dear @user_name,\n\nWe regret to inform you that all uploaded experiments of your lab with the following details have been permanently deleted.\n\nTitle of Lab: @lab_title\n\nList of experiments:\n@experiment_list\n\nReason for disapproval/deletion:\n@reason\n\nBest Wishes,\n\n@site_name Team,\nFOSSEE, IIT Bombay", [
+            $email_body_text = $this->t(
+              "Dear @user_name,\n\n
+              We regret to inform you that all uploaded experiments of your lab with the following details have been permanently deleted.\n\n
+              Title of Lab: @lab_title\n\n
+              List of experiments:\n@experiment_list
+              Reason for disapproval:\n@reason\n\n
+              Best Wishes,\n\n
+              @site_name Team,\n
+              FOSSEE, IIT Bombay", [
               '@user_name' => $proposal_q->name ?? $user_data->getDisplayName(),
               '@lab_title' => $user_info->lab_title,
               '@experiment_list' => $experiment_list,
@@ -424,9 +533,225 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
           }
         }
 
-        // -----------------------------------------------------------------
+
+        // =================================================================
+        // SECTION 2: EXPERIMENT ACTIONS
+        // =================================================================
+        elseif (($lab_actions == 0) && ($exp_actions == 1) && ($sol_actions == 0)) {
+          $connection->query("UPDATE lab_migration_solution SET approval_status = 1, approver_uid = :approver_uid WHERE experiment_id = :experiment_id AND approval_status = 0", [
+            ":approver_uid" => $user->id(),
+            ":experiment_id" => $exp_list_id,
+          ]);
+          $experiment_value = $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $exp_list_id)->execute()->fetchObject();
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('experiment_id', $exp_list_id)->orderBy('code_number', 'ASC')->execute()->fetchObject();
+          
+          \Drupal::messenger()->addMessage($this->t('Approved Entire Experiment.'));
+          $email_subject = $this->t(
+            '[@site_name] Your uploaded Lab Migration solution has been approved', ['@site_name' => $site_name])->render();
+          $email_body_text = $this->t(
+            "Dear @user_name,\n\n
+            Your experiment for R Lab Migration with the following details has been approved.\n\n
+            Experiment name: @experiment_name\n
+            Caption: @caption\n\n
+            Best Wishes,\n\n
+            @site_name Team,\n
+            FOSSEE, IIT Bombay", 
+            [
+              '@user_name' => $user_info->name ?? $user_data->getDisplayName(), '@experiment_name' => $experiment_value->title,
+              '@caption' => $solution_value->caption,
+              '@site_name' => $site_name])->render();
+          $action_performed = TRUE;
+        }
+        elseif (($lab_actions == 0) && ($exp_actions == 2) && ($sol_actions == 0)) {
+          $connection->query("UPDATE lab_migration_solution SET approval_status = 0 WHERE experiment_id = :experiment_id", [":experiment_id" => $exp_list_id]);
+          $experiment_value = $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $exp_list_id)->execute()->fetchObject();
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('experiment_id', $exp_list_id)->orderBy('code_number', 'ASC')->execute()->fetchObject();
+          
+          \Drupal::messenger()->addMessage($this->t('Entire Experiment marked as Pending Review.'));
+          $email_subject = $this->t(
+            '[@site_name] Your uploaded Lab Migration solution has been marked as pending', ['@site_name' => $site_name])->render();
+
+          $email_body_text = $this->t(
+            "Dear
+           @user_name,\n\n
+           Your uploaded solution for the experiment has been marked as pending for review.\n\n
+           Experiment name: @experiment_name\n
+           Caption: @caption\n\n
+           Best Wishes,\n\n
+           @site_name 
+           Team,
+           \nFOSSEE, IIT Bombay",
+            [
+              '@user_name' => $user_info->name ?? $user_data->getDisplayName(), '@experiment_name' => $experiment_value->title ,
+               '@caption' => $solution_value->caption, 
+               '@site_name' => $site_name])->render();
+          $action_performed = TRUE;
+        }
+
+           elseif (($lab_actions == 0) && ($exp_actions == 3) && ($sol_actions == 0)) {
+          if (strlen($message_reason) <= 30) { 
+            \Drupal::messenger()->addError($this->t('Please mention the reason for disapproval. Minimum 30 characters required.')); 
+            return; 
+          }
+          if (!$user->hasPermission('lab migration bulk delete code')) { 
+            \Drupal::messenger()->addError($this->t('You do not have permission to Bulk Dis-Approve and Delete Entire Experiment.')); 
+            return; 
+          }
+          
+          // 1. Capture info BEFORE deletion so variables are populated for the email
+          $experiment_value = 
+          $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $exp_list_id)->execute()->fetchObject();
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('experiment_id', $exp_list_id)->orderBy('code_number', 'ASC')->execute()->fetchObject();
+          
+          $global_service = \Drupal::service("lab_migration_global");
+          $deleted = FALSE;
+
+          // 2. Safely call the service pipeline or fallback to native DB purge if it fails
+          if (method_exists($global_service, 'lab_migration_delete_experiment') && @$global_service->lab_migration_delete_experiment($exp_list_id)) {
+            $deleted = TRUE;
+          } else {
+            // Native Fallback: Purge all solution rows tied to this experiment ID
+            $connection->delete('lab_migration_solution')
+              ->condition('experiment_id', $exp_list_id)
+              ->execute();
+            $deleted = TRUE;
+          }
+
+          if ($deleted) {
+            \Drupal::messenger()->addMessage($this->t('Dis-Approved and Deleted Entire Experiment solutions successfully.'));
+            
+            $email_subject = 
+            $this->t('[@site_name] Your uploaded Lab Migration solution has been disapproved', ['@site_name' => $site_name])->render();
+
+            $email_body_text = $this->t("Dear
+             @user_name,\n\n
+             We regret to inform you that your experiment with the following details under Lab Migration has been disapproved and deleted.\n\n
+             Experiment name: @experiment_name\n
+             Caption: @caption\n\n
+             Reason for disapproval:\n@reason\n\n
+             Please resubmit the modified solution.\n\n
+             Best Wishes,\n\n
+             @site_name 
+             Team,\n
+             FOSSEE, IIT Bombay", [
+              '@user_name' => $user_info->name ?? $user_data->getDisplayName(), 
+              '@experiment_list' => $experiment_list,
+              '@caption' => $solution_value->caption, 
+              '@reason' => $message_reason, 
+              '@site_name' => $site_name
+            ])->render();
+            
+            $action_performed = TRUE;
+          } else {
+            \Drupal::messenger()->addError($this->t('Error processing experiment removal routine.'));
+          }
+        }
+
+        // =================================================================
+        // SECTION 3: SOLUTION ACTIONS
+        // =================================================================
+        elseif (($lab_actions == 0) && ($exp_actions == 0) && ($sol_actions == 1)) {
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('id', $sol_list_id)->execute()->fetchObject();
+          $experiment_value = $solution_value ? $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $solution_value->experiment_id)->execute()->fetchObject() : NULL;
+          
+          $connection->update('lab_migration_solution')->fields(['approval_status' => 1, 'approver_uid' => $user->id()])->condition('id', $sol_list_id)->execute();
+          \Drupal::messenger()->addMessage($this->t('Solution approved.'));
+          
+          $email_subject = $this->t('[@site_name] Your uploaded Lab Migration solution has been approved', 
+          ['@site_name' => $site_name])->render();
+          $email_body_text =
+           $this->t("Dear @user_name,\n\n
+          Your experiment for R Lab Migration with the following details has been approved.Experiment name: @experiment_name\n
+          Caption: @caption\n\n
+          Best Wishes,\n\n
+          @site_name
+           Team,\nFOSSEE, IIT Bombay",
+            [
+              '@user_name' => $user_info->name ?? $user_data->getDisplayName(), '@experiment_name' => $experiment_value->title , 
+              '@caption' => $solution_value->caption ,
+              '@site_name' => $site_name])->render();
+          $action_performed = TRUE;
+        }
+
+
+        elseif (($lab_actions == 0) && ($exp_actions == 0) && ($sol_actions == 2)) {
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('id', $sol_list_id)->execute()->fetchObject();
+          $experiment_value = $solution_value ? $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $solution_value->experiment_id)->execute()->fetchObject() : NULL;
+          
+          $connection->query("UPDATE lab_migration_solution SET approval_status = 0 WHERE id = :id", [":id" => $sol_list_id]);
+          \Drupal::messenger()->addMessage($this->t('Solution marked as Pending Review.'));
+          
+          $email_subject = $this->t('[@site_name] Your uploaded Lab Migration solution has been marked as pending', ['@site_name' => $site_name])->render();
+          $email_body_text = $this->t("Dear @user_name,\n\n
+          Your uploaded solution for the experiment has been marked as pending for review.
+          \n\n
+          Experiment name: @experiment_name\n
+          Caption: @caption\n\n
+          Best Wishes,\n\n
+          @site_name Team,\n
+          FOSSEE, IIT Bombay",
+           [
+          '@user_name' => $user_info->name ?? $user_data->getDisplayName(), 
+          '@experiment_name' => $experiment_value->title ,
+          '@caption' => $solution_value->caption,
+          '@site_name' => $site_name])->render();
+          $action_performed = TRUE;
+        }
+elseif (($lab_actions == 0) && ($exp_actions == 0) && ($sol_actions == 3)) {
+          if (strlen($message_reason) <= 30) { 
+            \Drupal::messenger()->addError($this->t('Please mention the reason for disapproval. Minimum 30 characters required.')); 
+            return; 
+          }
+          if (!$user->hasPermission('lab migration bulk delete code')) { 
+            \Drupal::messenger()->addError($this->t('You do not have permission to Bulk Dis-Approve and Delete Solutions.')); 
+            return; 
+          }
+          
+          // 1. Capture info BEFORE deletion so variables are populated for the email
+          $solution_value = $connection->select('lab_migration_solution', 'lms')->fields('lms')->condition('id', $sol_list_id)->execute()->fetchObject();
+          $experiment_value = $solution_value ? $connection->select('lab_migration_experiment', 'lme')->fields('lme')->condition('id', $solution_value->experiment_id)->execute()->fetchObject() : NULL;
+          
+          $global_service = \Drupal::service("lab_migration_global");
+          $deleted = FALSE;
+
+          // 2. Safely call the service pipeline or fallback to native DB purge if it fails
+          if (method_exists($global_service, 'lab_migration_delete_solution') && @$global_service->lab_migration_delete_solution($sol_list_id)) {
+            $deleted = TRUE;
+          } else {
+            // Native Fallback: Purge this specific solution row out of the database matching schema fields
+            $connection->delete('lab_migration_solution')
+              ->condition('id', $sol_list_id)
+              ->execute();
+            $deleted = TRUE;
+          }
+
+          if ($deleted) {
+            \Drupal::messenger()->addMessage($this->t('Solution Dis-Approved and Deleted successfully.'));
+            
+            $email_subject = $this->t('[@site_name] Your uploaded Lab Migration solution has been disapproved', ['@site_name' => $site_name])->render();
+            $email_body_text = $this->t("Dear @user_name,\n\n
+            We regret to inform you that your solution with the following details under Lab Migration has been disapproved and deleted.\n\n
+            Experiment name: @experiment_name\n
+            Caption: @caption\n\n
+            Reason for disapproval:\n@reason\n\n
+            Please resubmit the modified solution.\n\n
+            Best Wishes,\n\n
+            @site_name Team,\nFOSSEE, IIT Bombay", [
+              '@user_name' => $user_info->name ?? $user_data->getDisplayName(), 
+              '@experiment_list' => $experiment_list,
+              '@caption' => $solution_value->caption, 
+              '@reason' => $message_reason, 
+              '@site_name' => $site_name
+            ])->render();
+            
+            $action_performed = TRUE;
+          } else {
+            \Drupal::messenger()->addError($this->t('Error processing solution removal routine.'));
+          }
+        }
+        // =================================================================
         // EMAIL TRANSMISSION DISPATCHER
-        // -----------------------------------------------------------------
+        // =================================================================
         if ($action_performed && !empty($email_subject) && !empty($email_body_text)) {
           $mail_manager = \Drupal::service('plugin.manager.mail');
           $langcode = $user_data->getPreferredLangcode();
@@ -441,20 +766,11 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
             'Bcc' => $lab_config->get('lab_migration_emails') ?: '',
           ];
 
-          $result = $mail_manager->mail(
-            'lab_migration',
-            'standard',
-            $email_to,
-            $langcode,
-            $params,
-            $from,
-            TRUE
-          );
-
+          $result = $mail_manager->mail('lab_migration', 'standard', $email_to, $langcode, $params, $from, TRUE);
           if (!empty($result['result'])) {
-            \Drupal::messenger()->addMessage($this->t('Notification email sent to @email.', ['@email' => $email_to]));
+            \Drupal::messenger()->addMessage($this->t('Notification email sent to contributer mail.'));
           } else {
-            \Drupal::messenger()->addError($this->t('Action completed, but the system failed to send out the notification email.'));
+            \Drupal::messenger()->addError($this->t('Action completed, but the notification email could not be routed out.'));
           }
         }
       } else {
