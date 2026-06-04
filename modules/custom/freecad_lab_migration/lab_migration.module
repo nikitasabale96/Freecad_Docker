@@ -371,14 +371,14 @@ Solution number: ' . $solution_data->code_number . '
 Caption: ' . $solution_data->caption . '
 
 Please ensure that ALL the codes follow guidelines at
-https://r.fossee.in/lab-migration/lab-migration-guidelines
+https://freecad.fossee.in/lab-migration/lab-migration-guidelines
 
 Best Wishes,
 
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name' => $site_name,
-    '!user_name' => $user_data->getDisplayName(),
+    '@user_name' => $user_data->getDisplayName(),
   ]);
 
   break;
@@ -423,7 +423,7 @@ Best Wishes,
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name' => $site_name,
-    '!user_name' => $user_data->getDisplayName(),
+    '@user_name' => $user_data->getDisplayName(),
   ]);
 
   break;
@@ -469,7 +469,7 @@ Best Wishes,
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name' => $site_name,
-    '!user_name' => $user_data->getDisplayName(),
+    '@user_name' => $user_data->getDisplayName(),
   ]);
 
   break;
@@ -495,20 +495,20 @@ case 'dependency_uploaded':
 
   /* Body */
   $message['body'][] = t('
-Dear !user_name,
+Dear @user_name,
 
 You have uploaded following dependency files:
 ' . $dependency_files . '
 
 Please ensure that ALL the codes follow guidelines at
-https://r.fossee.in/lab-migration/lab-migration-guidelines
+https://freecad.fossee.in/lab-migration/lab-migration-guidelines
 
 Best Wishes,
 
 @site_name Team,
 FOSSEE, IIT Bombay', [
     '@site_name' => $site_name,
-    '!user_name' => $user_data->getDisplayName(),
+    '@user_name' => $user_data->getDisplayName(),
   ]);
 
   break;
@@ -686,36 +686,36 @@ case 'solution_proposal_received':
 
   /* Body */
   $message['body'][] = t('
-Dear !provider,
+Dear @provider,
 
 We have received your proposal for providing solution for lab migration with the following details:
 
 List of experiments:
-!experiments
+@experiments
 
-Full Name: !fullname
-Email: !email
-Contact No.: !phone
-Department/Branch: !department
-University/Institute: !university
+Full Name: @fullname
+Email: @email
+Contact No.: @phone
+Department/Branch: @department
+University/Institute: @university
 
 Your proposal is under review. You will soon receive an email when the same has been approved / disapproved.
 
 Please ensure that ALL the codes follow guidelines at:
-https://r.fossee.in/lab-migration/lab-migration-guidelines
+https://freecad.fossee.in/lab-migration/lab-migration-guidelines
 
 Best Wishes,
 
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name'  => $site_name,
-    '!provider'  => $proposal_data->solution_provider_name,
-    '!experiments' => $experiment_list,
-    '!fullname'  => $proposal_data->solution_provider_name_title . ' ' . $proposal_data->solution_provider_name,
-    '!email'     => $user_data?->getEmail() ?? '',
-    '!phone'     => $proposal_data->solution_provider_contact_ph,
-    '!department'=> $proposal_data->department,
-    '!university'=> $proposal_data->solution_provider_university,
+    '@provider'  => $proposal_data->solution_provider_name,
+    '@experiments' => $experiment_list,
+    '@fullname'  => $proposal_data->solution_provider_name_title . ' ' . $proposal_data->solution_provider_name,
+    '@email'     => $user_data?->getEmail() ?? '',
+    '@phone'     => $proposal_data->solution_provider_contact_ph,
+    '@department'=> $proposal_data->department,
+    '@university'=> $proposal_data->solution_provider_university,
   ]);
 
   break;
@@ -774,38 +774,38 @@ case 'solution_proposal_approved':
 
   /* Body */
   $message['body'][] = t('
-Dear !name,
+Dear @user_name,
 
 Congratulations! Your proposal for lab migration with the following details has been approved:
 
-Full Name: !fullname
-Email: !email
-Contact No.: !phone
-Department/Branch: !department
-University/Institute: !university
-City: !city
-State: !state
+Full Name: @fullname
+Email: @email
+Contact No.: @phone
+Department/Branch: @department
+University/Institute: @university
+City: @city
+State: @state
 
 List of experiments:
-!experiments
+@experiments
 
 Please ensure that ALL the codes follow guidelines at:
-https://r.fossee.in/lab-migration/lab-migration-guidelines
+https://freecad.fossee.in/lab-migration/lab-migration-guidelines
 
 Best Wishes,
 
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name'   => $site_name,
-    '!name'        => $proposal_data->solution_provider_name,
-    '!fullname'    => $proposal_data->solution_provider_name_title . ' ' . $proposal_data->solution_provider_name,
-    '!email'       => $user_data?->getEmail() ?? '',
-    '!phone'       => $proposal_data->solution_provider_contact_ph,
-    '!department'  => $proposal_data->solution_provider_department,
-    '!university'  => $proposal_data->solution_provider_university,
-    '!city'        => $proposal_data->solution_provider_city,
-    '!state'       => $proposal_data->solution_provider_state,
-    '!experiments' => $experiment_list,
+    '@user_name'   => $proposal_data->solution_provider_name,
+    '@fullname'    => $proposal_data->solution_provider_name_title . ' ' . $proposal_data->solution_provider_name,
+    '@email'       => $user_data?->getEmail() ?? '',
+    '@phone'       => $proposal_data->solution_provider_contact_ph,
+    '@department'  => $proposal_data->solution_provider_department,
+    '@university'  => $proposal_data->solution_provider_university,
+    '@city'        => $proposal_data->solution_provider_city,
+    '@state'       => $proposal_data->solution_provider_state,
+    '@experiments' => $experiment_list,
   ]);
 
   break;
@@ -866,17 +866,17 @@ case 'solution_proposal_disapproved':
 
   /* Body */
   $message['body'][] = t('
-Dear !name,
+Dear @user_name,
 
 We regret to inform you that your Lab migration solution proposal has been disapproved.
 
-Title of Lab: !lab
+Title of Lab: @lab
 
 List of experiments:
-!experiments
+@experiments
 
 Reason:
-!reason
+@reason
 
 You are welcome to submit a new proposal.
 
@@ -885,10 +885,10 @@ Best Wishes,
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name'   => $site_name,
-    '!name'        => $proposal_data->name,
-    '!lab'         => $proposal_data->lab_title,
-    '!experiments' => $experiment_list,
-    '!reason'      => $params['solution_proposal_disapproved']['message'],
+    '@user_name'   => $proposal_data->solution_provider_name,
+    '@lab'         => $proposal_data->lab_title,
+    '@experiments' => $experiment_list,
+    '@reason'      => $params['solution_proposal_disapproved']['message'],
   ]);
 
   break;
@@ -941,7 +941,8 @@ case 'proposal_completed':
   }
 
   /* Load user */
-  $user_data = User::load($params['user_id']);
+  $user_data = User::load($params['proposal_received']['user_id']);
+
   $user_email = $user_data ? $user_data->getEmail() : '';
 
   /* Headers */
@@ -1043,7 +1044,7 @@ FOSSEE, IIT Bombay",
 
   /* Body */
   $message['body'][] = t('
-Dear ' . $proposal_data->solution_provider_name . ',
+Dear @user_name,
 
 Your following solution has been pending:
 
@@ -1060,7 +1061,7 @@ Best Wishes,
 @site_name Team
 FOSSEE, IIT Bombay', [
     '@site_name' => $site_name,
-    '!user_name' => $user_data->getDisplayName(),
+    '@user_name' => $user_data->getDisplayName(),
   ]);
 
   break;
