@@ -96,7 +96,7 @@ lab_migration.proposal_open:
   options:
     no_cache: TRUE
 lab_migration.solution_proposal_form:
-  path: /lab-migration/show-proposal/{id}
+  path: /lab-migration/show-proposal/{proposal_id}
   defaults:
     _title: 'Lab Migration Solution Proposal'
     _form: \Drupal\lab_migration\Form\LabMigrationSolutionProposalForm
