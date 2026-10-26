@@ -1,0 +1,25 @@
+uuid: 69b8400d-2ebf-444d-920d-e75cf40b797e
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.spoken-tutorial
+  module:
+    - system
+  theme:
+    - nava
+id: nava_spokentutorial_2
+theme: nava
+region: sidebar_left
+weight: -9
+provider: null
+plugin: 'system_menu_block:spoken-tutorial'
+settings:
+  id: 'system_menu_block:spoken-tutorial'
+  label: 'Spoken Tutorial'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

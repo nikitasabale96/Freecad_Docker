@@ -1,0 +1,14 @@
+uuid: a2185269-4ec3-4da0-81a7-47d7e5e0fcbf
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.lab_migration_reviewer
+  module:
+    - user
+id: user_remove_role_action.lab_migration_reviewer
+label: 'Remove the Lab Migration Reviewer role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: lab_migration_reviewer

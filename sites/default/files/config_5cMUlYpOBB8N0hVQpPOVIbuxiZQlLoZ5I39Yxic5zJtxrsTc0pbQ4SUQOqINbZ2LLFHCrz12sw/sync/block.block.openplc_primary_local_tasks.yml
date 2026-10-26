@@ -1,0 +1,22 @@
+uuid: 03a50195-17c4-43be-b6c4-5ca5273421e5
+langcode: en
+status: true
+dependencies:
+  theme:
+    - openplc
+_core:
+  default_config_hash: nGE3EoPQQaQCuqTUtZgw0-KIzmrqdKDzdNQf2JyPUt4
+id: openplc_primary_local_tasks
+theme: openplc
+region: content
+weight: -9
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Primary tabs'
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: false
+visibility: {  }

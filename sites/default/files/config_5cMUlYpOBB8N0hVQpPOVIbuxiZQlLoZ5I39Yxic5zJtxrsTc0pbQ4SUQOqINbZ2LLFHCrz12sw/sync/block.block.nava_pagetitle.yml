@@ -1,0 +1,18 @@
+uuid: f3205671-4f59-40a2-8b43-0cdf2d2dfd5a
+langcode: en
+status: true
+dependencies:
+  theme:
+    - nava
+id: nava_pagetitle
+theme: nava
+region: content
+weight: -5
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

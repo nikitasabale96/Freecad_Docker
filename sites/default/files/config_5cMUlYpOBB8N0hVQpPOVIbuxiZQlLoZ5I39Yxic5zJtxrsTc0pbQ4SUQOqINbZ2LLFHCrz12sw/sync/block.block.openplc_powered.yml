@@ -1,0 +1,22 @@
+uuid: 7e0e463c-bccd-40aa-824c-5181c85a141d
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - openplc
+_core:
+  default_config_hash: eYL19CLDyinGTWYQfBD1DswWzglEotE_kHnHx3AxTXM
+id: openplc_powered
+theme: openplc
+region: header
+weight: 0
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  label_display: '0'
+  provider: system
+visibility: {  }

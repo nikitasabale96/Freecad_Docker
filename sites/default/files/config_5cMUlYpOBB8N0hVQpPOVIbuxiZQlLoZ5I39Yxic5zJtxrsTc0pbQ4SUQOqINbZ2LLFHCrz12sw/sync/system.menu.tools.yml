@@ -1,0 +1,10 @@
+uuid: 7eeb5876-2f50-4df0-b4db-d031ee350860
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: BCM-vV1zzRaLHN18dqAR_CuGOj8AFJvTx7BKl_8Gcxc
+id: tools
+label: 'LAB MIGRATION PROJECT'
+description: 'User tool links, often added by modules'
+locked: true

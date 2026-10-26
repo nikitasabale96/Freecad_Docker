@@ -1,0 +1,23 @@
+uuid: 6472c3f7-6150-4f42-b7ff-dd9368a3c455
+langcode: en
+status: false
+dependencies:
+  module:
+    - search
+  theme:
+    - openplc
+_core:
+  default_config_hash: yEBET0cqDbk8dkWzaJw-8CKft0961VBflsISoSR6Lj8
+id: openplc_search_form_narrow
+theme: openplc
+region: sidebar_first
+weight: -8
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: 'Search form (narrow)'
+  label_display: '0'
+  provider: search
+  page_id: ''
+visibility: {  }

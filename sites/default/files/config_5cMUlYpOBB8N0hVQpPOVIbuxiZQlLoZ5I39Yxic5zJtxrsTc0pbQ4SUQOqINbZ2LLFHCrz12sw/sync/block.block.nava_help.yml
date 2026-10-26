@@ -1,0 +1,22 @@
+uuid: ea7b1c37-38ec-4509-a057-ed5c89b7194e
+langcode: en
+status: false
+dependencies:
+  module:
+    - help
+  theme:
+    - nava
+_core:
+  default_config_hash: 32RoZk8Q0zyE6MViYFtJr1j8AdEig0GezMYsNLmkK5M
+id: nava_help
+theme: nava
+region: content
+weight: -2
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  label_display: '0'
+  provider: help
+visibility: {  }

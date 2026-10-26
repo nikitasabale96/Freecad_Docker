@@ -1,0 +1,27 @@
+uuid: 103720db-4ec6-4758-9eb1-bc631faa01d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.restricted_html
+  module:
+    - comment
+    - contact
+    - filter
+    - lab_migration
+    - search
+    - system
+_core:
+  default_config_hash: 6WavjUYXIegP9AAg2zXGx54MWIVoomC3SZhNiqe-Dyk
+id: anonymous
+label: 'Anonymous user'
+weight: 0
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'lab migration create proposal'
+  - 'lab migration download code'
+  - 'search content'
+  - 'use text format restricted_html'

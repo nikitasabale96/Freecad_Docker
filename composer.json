@@ -16,41 +16,25 @@
     ],
     "require": {
         "composer/installers": "^2.0",
-        "drupal/adminimal_admin_toolbar": "^2.0",
-        "drupal/advagg": "^6.0@alpha",
-        "drupal/announcements": "^2.0@RC",
-        "drupal/captcha": "^2.0",
-        "drupal/ckeditor5_plugin_pack": "^1.5",
-        "drupal/ckeditor5_premium_features": "^1.6",
-        "drupal/ckeditor_accordion": "^2.3",
-        "drupal/cleaner": "^3.0@alpha",
-        "drupal/colorbox": "^2.1",
-        "drupal/core-composer-scaffold": "^10.3",
-        "drupal/core-project-message": "^10.3",
-        "drupal/core-recommended": "^10.3",
-        "drupal/core-vendor-hardening": "^10.3",
+        "drupal/classy": "^2.0",
+        "drupal/colorbox": "^2.0",
+        "drupal/core": "^11.0",
+        "drupal/core-composer-scaffold": "^11.0",
+        "drupal/core-project-message": "^11.0",
+        "drupal/core-recommended": "^11.0",
+        "drupal/core-vendor-hardening": "^11.0",
         "drupal/flexslider": "^3.0@alpha",
         "drupal/git_deploy": "^2.6",
-        "drupal/google_analytics": "^4.0",
-        "drupal/gtm": "^1.10",
-        "drupal/i18n_sso": "^1.7",
-        "drupal/insert_view": "^3.0",
-        "drupal/jquery_ui": "^1.8",
-        "drupal/masquerade": "^2.0",
-        "drupal/matomo": "^1.25",
-        "drupal/minifier_html": "^11.0",
-        "drupal/paragraphs": "^1.19",
-        "drupal/pathauto": "^1.15",
-        "drupal/printfriendly": "^3.6",
-        "drupal/rdf": "^3.0@beta",
-        "drupal/recaptcha": "^3.4",
-        "drupal/scheduled_maintenance": "^2.0",
-        "drupal/spambot": "^1.4",
-        "drupal/views_migration": "^1.2",
-        "drupal/views_pdf": "^3.0@alpha",
-        "drupal/webform": "^6.2",
-        "drupal/xmlsitemap": "^2.0",
-        "drush/drush": "^12"
+        "drupal/google_tag": "^2.0",
+        "drupal/jquery_ui": "^1.7",
+        "drupal/libraries": "^4.0",
+        "drupal/matomo": "^1.19",
+        "drupal/slick": "^3.0",
+        "drupal/slick_views": "^3.0",
+        "drupal/superfish": "^1.8",
+        "drupal/views_slideshow": "^5.0",
+        "drush/drush": "^13.0",
+        "mglaman/composer-drupal-lenient": "^2.0"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -60,12 +44,13 @@
     "config": {
         "allow-plugins": {
             "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
             "drupal/core-composer-scaffold": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
+            "mglaman/composer-drupal-lenient": true,
             "phpstan/extension-installer": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "php-http/discovery": true
+            "symfony/runtime": true
         },
         "sort-packages": true
     },
@@ -124,6 +109,12 @@
                 "  * Remove the plugin that prints this message:",
                 "      composer remove drupal/core-project-message"
             ]
+        },
+        "drupal-lenient": {
+            "allowed-list": ["drupal/php", "drupal/scheduled_maintenance", "drupal/views_dates"]
         }
+    },
+    "require-dev": {
+        "drupal/upgrade_status": "^4.3"
     }
 }

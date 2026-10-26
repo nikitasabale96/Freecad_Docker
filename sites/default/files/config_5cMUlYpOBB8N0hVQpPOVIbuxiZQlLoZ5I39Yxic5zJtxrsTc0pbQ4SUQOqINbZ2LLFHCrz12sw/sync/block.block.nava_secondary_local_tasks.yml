@@ -1,0 +1,22 @@
+uuid: a9f50d4c-fa29-4ab1-b544-449c1a738a80
+langcode: en
+status: false
+dependencies:
+  theme:
+    - nava
+_core:
+  default_config_hash: eqGUDDp50dv3qWHXkXyiLoHgYnXgnP6THlyBDfyX_4c
+id: nava_secondary_local_tasks
+theme: nava
+region: content
+weight: -3
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

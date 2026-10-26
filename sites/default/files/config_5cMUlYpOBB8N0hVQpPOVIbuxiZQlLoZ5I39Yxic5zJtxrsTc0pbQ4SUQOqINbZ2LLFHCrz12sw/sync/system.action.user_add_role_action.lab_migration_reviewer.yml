@@ -1,0 +1,14 @@
+uuid: ea6560f5-eabb-4536-997b-54d0e4253311
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.lab_migration_reviewer
+  module:
+    - user
+id: user_add_role_action.lab_migration_reviewer
+label: 'Add the Lab Migration Reviewer role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: lab_migration_reviewer

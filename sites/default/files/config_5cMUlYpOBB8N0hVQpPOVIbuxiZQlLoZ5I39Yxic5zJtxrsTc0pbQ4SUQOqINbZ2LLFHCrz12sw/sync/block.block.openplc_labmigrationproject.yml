@@ -1,0 +1,25 @@
+uuid: 4ad2dd20-7af3-470f-83fa-c4b9872140c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.tools
+  module:
+    - system
+  theme:
+    - openplc
+id: openplc_labmigrationproject
+theme: openplc
+region: sidebar_first
+weight: 1
+provider: null
+plugin: 'system_menu_block:tools'
+settings:
+  id: 'system_menu_block:tools'
+  label: 'LAB MIGRATION PROJECT'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

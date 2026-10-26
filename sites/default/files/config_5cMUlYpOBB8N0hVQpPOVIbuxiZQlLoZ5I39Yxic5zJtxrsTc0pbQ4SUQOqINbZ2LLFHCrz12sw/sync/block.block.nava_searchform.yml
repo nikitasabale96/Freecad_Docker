@@ -1,0 +1,21 @@
+uuid: b79a6d41-cfbe-4f34-8a65-ffa24cc697e9
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - nava
+id: nava_searchform
+theme: nava
+region: sidebar_left
+weight: 0
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: 'Search form'
+  label_display: '0'
+  provider: search
+  page_id: ''
+visibility: {  }

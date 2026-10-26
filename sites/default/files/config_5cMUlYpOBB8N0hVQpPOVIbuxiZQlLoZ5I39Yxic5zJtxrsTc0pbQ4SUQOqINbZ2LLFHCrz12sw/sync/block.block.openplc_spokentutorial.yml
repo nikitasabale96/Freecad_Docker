@@ -1,0 +1,25 @@
+uuid: df34ee5e-a5fe-4faa-8738-e31fa00ae26e
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.spoken-tutorial
+  module:
+    - system
+  theme:
+    - openplc
+id: openplc_spokentutorial
+theme: openplc
+region: banner
+weight: -10
+provider: null
+plugin: 'system_menu_block:spoken-tutorial'
+settings:
+  id: 'system_menu_block:spoken-tutorial'
+  label: 'spoken tutorial'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

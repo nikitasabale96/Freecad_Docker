@@ -1,0 +1,18 @@
+uuid: bdad087f-8a30-4607-97ed-56ecb0f2b072
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Homepage Carousel Images'
+type: homepage_carousel_images
+description: 'USed to add images display on the homepage slider block'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

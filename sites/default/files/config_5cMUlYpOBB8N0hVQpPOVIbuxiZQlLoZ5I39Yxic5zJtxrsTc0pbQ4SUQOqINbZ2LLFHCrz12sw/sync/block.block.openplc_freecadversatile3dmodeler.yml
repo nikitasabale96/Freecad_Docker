@@ -1,0 +1,25 @@
+uuid: 253fdc12-2003-43b2-aa22-10dcb20344e7
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:37d4f42c-cf1e-40f6-b9fc-c94f9115976e'
+  module:
+    - block_content
+  theme:
+    - openplc
+id: openplc_freecadversatile3dmodeler
+theme: openplc
+region: header
+weight: 0
+provider: null
+plugin: 'block_content:37d4f42c-cf1e-40f6-b9fc-c94f9115976e'
+settings:
+  id: 'block_content:37d4f42c-cf1e-40f6-b9fc-c94f9115976e'
+  label: 'FreeCAD Versatile 3D modeler'
+  label_display: visible
+  provider: block_content
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

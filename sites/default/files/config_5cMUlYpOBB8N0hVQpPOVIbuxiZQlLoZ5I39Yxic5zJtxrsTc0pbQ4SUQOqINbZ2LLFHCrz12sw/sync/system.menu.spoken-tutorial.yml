@@ -1,0 +1,8 @@
+uuid: cb0ecbb9-f152-42f1-9fb2-9995920ce1b4
+langcode: en
+status: true
+dependencies: {  }
+id: spoken-tutorial
+label: 'Spoken Tutorial'
+description: 'spoken tutorial'
+locked: false

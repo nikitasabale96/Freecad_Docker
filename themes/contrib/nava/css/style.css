@@ -136,7 +136,7 @@ h4 {
 
 h5, h6 {
   font-size: 1.1rem;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 /* Typography -> Paragraph */
@@ -953,7 +953,7 @@ td {
   display: flex;
   gap: 1rem;
   align-items: center;
-  z-index: 1000;
+  z-index:1000;
 }
 
 /* Header menu */
@@ -2916,26 +2916,26 @@ hr.line-double {
     bottom: 0;
     height: 2px;
   }
-  .region-primary-menu .menu > li::before {
+  /* .region-primary-menu .menu > li::before {
     left: 0;
     background-color: var(--color-dark);
     width: 10px;
-  }
+  } */
   .menu-item-has-children > a {
     position: relative;
   }
   .menu-item-has-children > a::after {
     content: "+";
   }
-  .region-primary-menu .menu > li::after {
+  /* .region-primary-menu .menu > li::after {
     left: 12px;
     background-color: var(--color-primary);
     width: 20px;
     transition: width 0.3s linear;
-  }
-  .region-primary-menu .menu > li:hover::after {
-    width: calc(100% - 12px);
-  }
+  } */
+  /* .region-primary-menu .menu > li:hover {
+    text-decoration: underline;
+  } */
   .region-primary-menu .submenu {
     position: absolute;
     background-color: var(--color-dark);

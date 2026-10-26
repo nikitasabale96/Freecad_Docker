@@ -1,0 +1,14 @@
+uuid: be33268a-bdb9-41c1-b3b7-4507ae47f046
+langcode: en
+status: true
+dependencies: {  }
+name: homepage_carousel_imagestyle
+label: 'Homepage Carousel ImageStyle'
+effects:
+  083abfc6-5302-4106-8bfd-0dea56427e80:
+    uuid: 083abfc6-5302-4106-8bfd-0dea56427e80
+    id: image_resize
+    weight: 1
+    data:
+      width: 950
+      height: 430

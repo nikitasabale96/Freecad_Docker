@@ -1,0 +1,15 @@
+_core:
+  default_config_hash: VDJxTZtQR21qB4lvOq8zszJZLvLKrSPQpdn2E3T71Ww
+langcode: en
+uuid: a0f289d0-23bd-495c-8f56-157cdc7032f6
+name: FreeCAD
+mail: webmaster@fossee.in
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node/26
+admin_compact_mode: false
+weight_select_max: 100
+default_langcode: en
+mail_notification: null

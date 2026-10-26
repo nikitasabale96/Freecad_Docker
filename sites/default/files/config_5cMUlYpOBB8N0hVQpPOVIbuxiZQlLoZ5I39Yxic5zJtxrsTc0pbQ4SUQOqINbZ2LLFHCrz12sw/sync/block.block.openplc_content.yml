@@ -1,0 +1,22 @@
+uuid: 049d5c65-2633-42c4-b102-290b07f81bae
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - openplc
+_core:
+  default_config_hash: erQSEZF2XUjNmgTl0uNRBzmg18ZGXwUcw2FhApoeuHk
+id: openplc_content
+theme: openplc
+region: content
+weight: -7
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

@@ -1,0 +1,18 @@
+uuid: 96bff0c6-c613-45fa-9e9f-3d91285195c4
+langcode: en
+status: true
+dependencies:
+  module:
+    - lab_migration
+id: lab_migration_reviewer
+label: 'Lab Migration Reviewer'
+weight: 4
+is_admin: null
+permissions:
+  - 'Verify custom Certificate of lab'
+  - 'lab migration approve code'
+  - 'lab migration approve proposal'
+  - 'lab migration bulk delete code'
+  - 'lab migration bulk manage code'
+  - 'lab migration edit proposal'
+  - 'lab migration manage proposal'
